@@ -1,0 +1,40 @@
+{% extends "layout_base.html" %}
+	{% block body %}
+
+    <body id="LoginForm">
+
+    <div class="container" style="margin-top:70px;">
+    
+    <div class="login-form">
+    <div class="main-div">
+        <div class="panel">
+       <h2>Admin Login</h2>
+       <p>Please enter your user and password</p>
+       </div>
+        <form id="login" method="post">
+    
+            <div class="form-group">
+    
+    
+                <input type="text" class="form-control" id="f_user" name="f_user" placeholder="User">
+    
+            </div>
+    
+            <div class="form-group">
+    
+                <input type="password" class="form-control" id="f_pwd" name="f_pwd" placeholder="Password">
+    
+            </div>
+            <div class="forgot">
+            <!--<a href="reset.html">Forgot password?</a>-->
+    </div>
+            <button type="submit" class="btn btn-primary" name='verifica' id='verifica'>Login</button>
+    
+        </form>
+        </div>
+    <p class="botto-text">Sistema de Registro A Cursos</p>
+    </div></div></div>
+    <!--<script src="{{ url_for('static', filename='js/script_login.js') }}"></script>-->
+</body> 
+
+    {% endblock %}

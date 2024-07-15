@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	  <meta charset="UTF-8">
+	  <meta name="description" content="Web Class">
+	  <meta name="keywords" content="HTML, CSS, JavaScript, Python, Flask, Jquery">
+	  <meta name="author" content="David">
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Aspirantes cursos en Python</title>
+  <link rel="shorcut icon" type="image/png"  href="{{ url_for('static',filename='img/logo_favicon.png') }}">
+  <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='bootstrap-5.3.2/dist/css/bootstrap.css') }}">
+  <!--<link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/index.css') }}">-->
+  <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/estilo_aspirante.css') }}">
+  <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/index.css') }}">
+
+
+    <!-- Sweet alert Js -->
+    <script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>
+    <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
+
+
+
+  
+  </head>
+<body>
+	<header class="main-head">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="btn btn-success" href={{ url_for('add_aspirante')}}>Registro</a>
+    <a class="btn btn-warning" href="#" style="margin-left: 5px">Buscar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample04">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href={{ url_for('index')}}>Login <span class="sr-only">(current)</span></a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ajustes</a>
+          <div class="dropdown-menu drop-ajustes" aria-labelledby="dropdown03">
+            <a class="dropdown-item" href="">Cambios Registro</a>
+          </div>
+        </li>
+
+
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catálogos</a>
+          <div class="dropdown-menu drop-catalogo" aria-labelledby="dropdown04">
+            <a class="dropdown-item" href="">Catalogo de Cursos</a>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{session.user_id}}</a>
+          <div class="dropdown-menu drop-catalogo" aria-labelledby="dropdown06">
+            <a class="dropdown-item" href="">Cerrar sesión</a>
+          </div>
+        </li>
+
+       </ul>
+    </div>
+</nav>
+	</header>
+	{% block body %}
+	{% endblock %}
+    
+    <script src="{{url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/bootbox/bootbox.js')}}"></script>
+    <script src="{{url_for('static', filename='js/script_aspirante.js')}}"></script>
+  </body>
+</html>

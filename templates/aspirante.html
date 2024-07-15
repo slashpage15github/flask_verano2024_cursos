@@ -1,0 +1,114 @@
+{% extends "layout_base.html" %}
+{% block body %}
+<body id="aspira">
+    <div class="container_aspirante">
+        <h1>Registro de Aspirantes</h1>
+        <p>Puede seleccionar un curso o varios, requiere RFC</p>
+        <form name="forma" id="forma" action="/registra" method="post" onsubmit="return valida_aspirante();">
+            {% include "sweetalerts.html" %}
+            <div id="row">
+                <div class="col-25">
+                    <label for="rfc">RFC:</label>
+                </div>
+                <div class="col-75">
+                    <input class="mayusculas" type="text" id="f_rfc" name="f_rfc" placeholder="Ingrese su RFC" maxlength="13">
+                </div>
+            </div>
+
+            <div id="row">
+                <div class="col-25">
+                    <label for="nombre">Nombre:</label>
+                </div>
+                <div class="col-75">
+                    <input class="mayusculas" type="text" id="f_nombre" name="f_nombre" placeholder="Ingrese su nombre">
+                </div>
+            </div>
+
+            <div id="row">
+                <div class="col-25">
+                    <label for="paterno">Paterno:</label>
+                </div>
+                <div class="col-75">
+                    <input class="mayusculas" type="text" id="f_paterno" name="f_paterno" placeholder="Ingrese su paterno">
+                </div>
+            </div>
+
+            <div id="row">
+                <div class="col-25">
+                    <label for="materno">Materno:</label>
+                </div>
+                <div class="col-75">
+                    <input class="mayusculas" type="text" id="f_materno" name="f_materno" placeholder="Ingrese su materno">
+                </div>
+            </div>
+
+            <div id="row">
+                <div class="col-25">
+                    <label for="telefono">Teléfono:</label>
+                </div>
+                <div class="col-75">
+                    <input type="tel" id="f_telefono" name="f_telefono" placeholder="Ingrese su teléfono" maxlength="10">
+                </div>
+            </div>
+
+            <div id="row">
+                <div class="col-25">
+                    <label for="empresa">Empresa:</label>
+                </div>
+                <div class="col-75">
+                    <select id="f_empresa" name="f_empresa">
+                        {% if lista_empresas|length !=0  %}
+                        <option value="0">Seleccione:</option>
+                            {% for empre in lista_empresas %}
+                                <option value="{{ empre[0] }}">{{ empre[1] }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="0">No hay Datos</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div id="row">
+                <div class="col-25">
+                    <label for="email">Correo electrónico:</label>
+                </div>
+                <div class="col-75">
+                    <input type="email" id="f_email" name="f_email" placeholder="Ingrese su correo electrónico">
+                </div>
+            </div>
+
+            <div id="row">
+                <div class="col-25">
+                    <label for="curso">Curso:</label>
+                </div>
+                <div class="col-75">
+                    <select id="f_curso" name="f_curso">
+                        <option value="0">Seleccione:</option>
+                        {% if lista_cursos|length !=0  %}
+                        <option value="0">Seleccione:</option>
+                            {% for cur in lista_cursos %}
+                                <option value="{{ cur[0] }}">{{ cur[1] }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="0">No hay Datos</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            
+            <div id="row2">
+                <input class="boton_aspirante" type="submit" value="Registrar">
+                
+            </div>
+        
+        
+        </form> 
+    
+    
+    
+    
+    </div><!-- end container-->
+    <script src="js/script_aspirante.js"></script> <!-- Importa el script para validaciones -->
+</body>
+{% endblock %}
