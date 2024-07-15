@@ -25,6 +25,16 @@
                 <input type="password" class="form-control" id="f_pwd" name="f_pwd" placeholder="Password">
     
             </div>
+            <div class="input-group form-group">
+                <div  style=" margin-left: 20px ">
+                              <div class="g-recaptcha"
+                                 data-sitekey="6LcUp24UAAAAAIMbz4GVp_jIvYJG_0UN4DCrlVXA">
+                                 </div>
+                          </div>
+              </div>
+
+
+
             <div class="forgot">
             <!--<a href="reset.html">Forgot password?</a>-->
     </div>
@@ -35,6 +45,7 @@
     <p class="botto-text">Sistema de Registro A Cursos</p>
     </div></div></div>
     <script src="{{ url_for('static', filename='js/script_login.js') }}"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </body> 
 
     {% endblock %}

@@ -4,7 +4,7 @@ $(document).ready(function() {
       e.preventDefault();
       var js_us=document.getElementById("f_user").value.trim();
       var js_pw=document.getElementById("f_pwd").value.trim();
-  
+      var reresponse = grecaptcha.getResponse();
       //alert(js_us+' -  '+js_pw);
       if (js_us.length==0 || js_pw.length==0){
           Swal.fire({
@@ -23,6 +23,13 @@ $(document).ready(function() {
           return  false;
   
       }
+      else if (reresponse.length == 0){
+        Swal.fire({
+        type: 'error',
+        title: 'Error: Marque la casilla de verificacion de seguridad, no puede ir vacía, verifique.',
+        text: '¡Verificar, por favor!'});
+        return false;
+    }
       else{
           $.ajax({  
               url:'/valida_usuario',  
