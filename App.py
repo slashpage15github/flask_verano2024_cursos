@@ -1,8 +1,9 @@
-from flask import Flask,render_template,url_for,request,flash,redirect,jsonify
+from flask import Flask,render_template,url_for,request,flash,redirect,jsonify,session
 import model.package_model.Empresa as Empresa
 import model.package_model.Curso as Curso
 import model.package_model.Aspirante as Aspirante_obj
 import model.package_model.AspiranteCursos as AspiranteCursos_o
+import model.package_model.Usuarios as Usuarios_o
 from datetime import datetime,date,time
 import jsonpickle
 import json
@@ -10,6 +11,7 @@ import json
 #import metodos static
 from model.package_model.Aspirante import Aspirante
 from model.package_model.AspiranteCursos import AspiranteCursos
+from model.package_model.Usuarios import Usuarios
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'j\x86\x14\xcc:\x99\xb3\x91\xf8/Bv\r\xaa"\xf1\x8a\xfa(A\xa1\xe2\x85\xd6'
@@ -113,6 +115,41 @@ def delete_curso():
         return str(datos_curso)
     else:
         return "-1"
+    
+@app.route("/valida_usuario",methods=['GET','POST'])
+def valida_usuario():
+    if request.method=='POST':
+        username=request.form['js_us']
+        password=request.form['js_pw']
+        existe=Usuarios.verifica_usuario(username,password)
+        return str(existe)
+    
+@app.route("/sesion_usuario",methods=['GET','POST'])
+def sesion_usuario():
+    if request.method=='POST':
+        username=request.form['js_us']
+        password=request.form['js_pw']
+        obj_user= Usuarios()
+        user_datos=obj_user.verifica_usuario_datos(username,password)
+        session['user_id']=user_datos[0]
+        session['user_name']=user_datos[1]
+        
+        data = { 
+            "id" : user_datos[0], 
+            "nombre" : user_datos[1],
+        } 
+        return jsonify(data)
+    
+@app.route("/profile")
+def profile():
+    return render_template('profile.html')
+
+@app.route('/logout')
+def logout():
+   # remove the username from the session if it is there
+   session.pop('user_id', None)
+   session.pop('user_name', None)
+   return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True)
