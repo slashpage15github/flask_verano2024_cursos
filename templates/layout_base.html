@@ -13,12 +13,18 @@
   <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/estilo_aspirante.css') }}">
   <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/index.css') }}">
 
-
-    <!-- Sweet alert Js -->
+  <!-- DATATABLES CSSS-->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='datatables/DataTables-1.13.6/css/jquery.dataTables.min.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='datatables/Buttons-2.4.2/css/buttons.dataTables.min.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='datatables/Responsive-2.5.0/css/responsive.dataTables.min.css') }}"/>    
+    
+  <!-- Sweet alert Js -->
     <script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>
     <link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='css/sweetalert2.min.css') }}">
 
-
+    <!-- Jquery TOGHETHER TO WORK-->
+    <script src="{{url_for('static', filename='js/jquery-3.4.1.js')}}"></script>
+    <script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
 
   
   </head>
@@ -50,7 +56,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catálogos</a>
           <div class="dropdown-menu drop-catalogo" aria-labelledby="dropdown04">
-            <a class="dropdown-item" href="">Catalogo de Cursos</a>
+            <a class="dropdown-item" href={{ url_for('lista_cursos')}}>Catalogo de Cursos</a>
           </div>
         </li>
 
@@ -71,5 +77,14 @@
     <script src="{{url_for('static', filename='bootstrap-5.3.2/dist/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/bootbox/bootbox.js')}}"></script>
     <script src="{{url_for('static', filename='js/script_aspirante.js')}}"></script>
+    <!-- DATATABLES JS -->
+    <script src="{{url_for('static', filename='datatables/DataTables-1.13.6/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{url_for('static', filename='datatables/Buttons-2.4.2/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{url_for('static', filename='datatables/Buttons-2.4.2/js/buttons.html5.min.js')}}"></script>
+    <script src="{{url_for('static', filename='datatables/Buttons-2.4.2/js/buttons.print.min.js')}}"></script>
+    <script src="{{url_for('static', filename='datatables/Responsive-2.5.0/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{url_for('static', filename='datatables/JSZip-3.10.1/jszip.min.js')}}"></script>
+    <script src="{{url_for('static', filename='datatables/pdfmake-0.2.7/pdfmake.min.js')}}"></script>
+    <script src="{{url_for('static', filename='datatables/pdfmake-0.2.7/vfs_fonts.js')}}"></script>
   </body>
 </html>

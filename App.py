@@ -1,9 +1,11 @@
-from flask import Flask,render_template,url_for,request,flash,redirect
+from flask import Flask,render_template,url_for,request,flash,redirect,jsonify
 import model.package_model.Empresa as Empresa
 import model.package_model.Curso as Curso
 import model.package_model.Aspirante as Aspirante_obj
 import model.package_model.AspiranteCursos as AspiranteCursos_o
 from datetime import datetime,date,time
+import jsonpickle
+import json
 
 #import metodos static
 from model.package_model.Aspirante import Aspirante
@@ -60,6 +62,57 @@ def registra_aspirante():
         flash(f"Aspirante y curso registrado correctamente","success")
         return redirect(url_for('add_aspirante'))
 
+@app.route("/lista_cursos",methods=["POST","GET"])
+def lista_cursos():
+    obj_cur= Curso.Curso()
+    lista_cursos = obj_cur.obtener_cursos()
+    return render_template('lista_cursos.html',lista_cursos=lista_cursos)
+
+@app.route("/add_curso",methods=['POST'])
+def add_curso():
+    _f_id=request.form['f_id']
+    _f_nombre=request.form['f_nombre'].upper()
+    _fec=datetime.now()
+    if _f_id=='':
+        obj_cur= Curso.Curso(_f_id,_f_nombre,_fec)
+        res_cur=obj_cur.agregar_curso(obj_cur)
+        return str(res_cur)
+    else:
+        obj_cur= Curso.Curso(_f_id,_f_nombre,_fec)
+        res_cur=obj_cur.modificar_curso(obj_cur)
+        return str(res_cur)
+    
+@app.route("/ver_detalle_curso_data",methods=['POST'])
+def ver_detalle_curso_data():
+    _curso_id=request.form['curso_id']
+    obj_cur= Curso.Curso()
+    datos_curso=obj_cur.obtener_curso_por_id(_curso_id)
+    data = { 
+            "id" : datos_curso[0], 
+            "nombre" : datos_curso[1],
+            "fecha" : datos_curso[2], 
+        } 
+    return jsonify(data)
+    #return str(datos_curso)
+    
+@app.route("/ver_detalle_curso",methods=['POST'])
+def ver_detalle_curso():
+    _curso_id=request.form['curso_id']
+    obj_cur= Curso.Curso()
+    datos_curso=obj_cur.obtener_curso_por_id(_curso_id)
+    return render_template('ver_detalle_curso.html',datos_curso=datos_curso)
+    #return str(res_cur)
+    
+@app.route("/delete_curso",methods=['POST'])
+def delete_curso():
+    _curso_id=request.form['id']
+    cuantos_cursos=AspiranteCursos.existe_curso(_curso_id)
+    if cuantos_cursos == 0:
+        obj_cur= Curso.Curso()
+        datos_curso=obj_cur.eliminar_curso(_curso_id)
+        return str(datos_curso)
+    else:
+        return "-1"
 
 if __name__ == "__main__":
     app.run(debug=True)

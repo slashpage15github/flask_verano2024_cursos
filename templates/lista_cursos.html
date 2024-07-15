@@ -1,0 +1,335 @@
+{% extends "layout_base.html" %}
+	{% block body %}
+    <body id="lista_cursos">
+        <div class="container" id="contenedor">
+            <h1>Listado del Catalogo de Cursos</h1>
+                <div class="form-group col-md-12">
+                    <div align="center">  
+                        <button type="button" name="add" id="add" data-bs-toggle="modal" data-bs-target="#add_data_Modal" class="btn btn-primary">Agregar Curso</button>  
+                   </div> 
+                    <table id="tlista_cursos" class="display" style="width:100%">
+                        <thead class="text-capitalize">
+                            <tr>
+                                <th>ID CURSO</th>
+                                <th>NOMBRE CURSO</th>
+                                <th>FECHA ALTA</th>
+                                <th>Actualizar</th>
+                                <th>Ver</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cursos in lista_cursos %}
+                            <tr>
+                                <td>{{ cursos[0] }}</td>
+                                <td>{{ cursos[1] }}</td>
+                                <td>{{ cursos[2] }}</td>
+                                <td>
+                                    <button class="update btn btn-success btn-sm" id="{{"update_"~cursos[0] }}" data-id="{{ cursos[0] }}">Actualizar</button>
+                                </td>
+                                <td>
+                                    <button class="ver btn btn-warning btn-sm" id="{{"ver_"~cursos[0] }}" data-id="{{ cursos[0] }}">Ver</button>
+                                </td>
+                                <td>
+                                    <button class="delete btn btn-danger btn-sm" id="{{"del_"~cursos[0] }}" data-id="{{ cursos[0] }}">Eliminar</button>
+                                </td>                                
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ID CURSO</th>
+                                <th>NOMBRE CURSO</th>
+                                <th>FECHA ALTA</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div><!--end form-group col-md-12-->
+        </div><!--end container-->
+    <script>
+        $(document).ready(function(){
+            if ($('#tlista_cursos').length) {
+
+                /*EN ESTA CASO SE DEBEN DUPICAR EL THEAD UNO CON TH Y OTRO CON TD: VER HTML*/
+                $('#tlista_cursos tfoot th').not(":eq(3),:eq(4),:eq(5)").each( function () {
+                   var title = $('#tlista_cursos thead th').eq( $(this).index() ).text();
+                   $(this).html( '<input type="text" placeholder="Filtra '+title+'" />' );
+               } );
+
+
+               var table= $('#tlista_cursos').DataTable({
+                    dom: 'Blfrtip',
+                            buttons: [{
+                                extend: 'excelHtml5',
+                                    messageTop: 'Direccion De cursos',
+                                    text:"Exporta Excel",
+                                    title:"Listado de cursos",
+                            },
+                            {
+                                /*'csvHtml5',*/
+                                    extend: 'csvHtml5',
+                                    text:"Exporta csv",
+                                    title:"Listado de cursos",
+                                    messageTop: 'Direccion De cursos',
+                                  },
+                                              {
+                                    extend: 'pdfHtml5',
+                                    title: 'Listado de cursos'
+                                }
+                            ],
+                        responsive: true,
+                        "language": {
+                        "search": "Filtro de Registros:",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sInfo": "Mostrando del (_START_ al _END_) de un total de _TOTAL_ registros",
+                        "oPaginate": {
+                            "sPrevious": "Anterior",
+                            "sNext": "Siguiente"
+                          }
+                      }  
+                        });
+
+
+    // Apply the search
+    table.columns().eq( 0 ).each( function ( colIdx ) {
+        if (colIdx == 3 || colIdx == 4 || colIdx == 5) return;
+
+        $( 'input', $('tfoot th')[colIdx] ).on( 'keyup change', function () {
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();
+        } );
+    } );                      
+            
+}
+
+            $('#add').click(function(){
+
+                $("h4.modal-title").text("Agregado de Curso");
+                $('#insert').val("Insert");  
+                $('#insert_form')[0].reset();  
+          });
+    
+          $('#insert_form').on("submit", function(event,table){
+            event.preventDefault();  
+           if($('#f_nombre').val() == '')  
+           {  
+                //bootbox.alert('Error:Nombre curso es requerido');
+            Swal.fire({
+            icon: 'warning',
+            title: 'Error',
+            text: 'Error:Nombre curso es requerido'});  
+           }  
+           else  
+           { 
+            let f_nombre=$('#f_nombre').val();
+            let f_id=$('#curso_id').val();
+            if (f_id==''){
+                var flag1='I';
+            }
+            else{
+                var flag1='U';
+            }
+            //alert(f_nombre+'-'+f_id+'-'+flag1);
+            $.ajax({  
+                url:'/add_curso',  
+                method:'POST',  
+                data:{f_nombre:f_nombre,f_id:f_id},
+                beforeSend:function(){ 
+                    if($('#curso_id').val() == ''){ 
+                      $('#insert').val("Insertando");
+                    }
+                    else{
+                      $('#insert').val("Actualizando");
+                    }  
+             },
+                success:function(response){
+                       //alert(response);
+                       //console.log(response)
+                       if (response==1){
+                        $('#insert_form')[0].reset();  
+                        $('#add_data_Modal').modal('hide');
+                        /*location.reload();
+                        mensaje('success','Aviso','El Curso ha sido registrado!',null);*/
+                        if (flag1=='I'){
+                            Swal.fire({
+                                title: "Registro de Cursos",
+                                text: "¡Curso Ingresado Correctamente!",
+                                icon: "success"
+                                }).then(function() {
+                                window.location = "lista_cursos";
+                                });
+                        }
+                        else {
+                            Swal.fire({
+                                title: "Actualización de Cursos",
+                                text: "¡Curso Actualizado Correctamente!",
+                                icon: "success"
+                                }).then(function() {
+                                window.location = "lista_cursos";
+                                });                            
+                        }    
+                      }
+                      else{
+                        Swal.fire({
+                            title: "Actualización de Cursos",
+                            text: "¡No hubo cambios en el curso!",
+                            icon: "error",
+                            });
+                      }  
+                     
+                },
+               error : function(request, status, error) {
+
+                       var val = request.responseText;
+                       alert("error"+val);
+               }  
+           });  
+           }
+        });
+
+
+            $('#tlista_cursos tbody').on('click', '.delete', function() {
+                var el = this;
+                // Delete id
+                var deleteid = $(this).data('id');
+                // Confirm box
+                bootbox.confirm("¿Deseas realmente borrar el registro?", function(result) {
+ 
+                    if(result){
+                        // AJAX Request
+                        $.ajax({
+                          url: '/delete_curso',
+                          type: 'POST',
+                          data: { id:deleteid },
+                          success: function(response){
+                             console.log(response);
+                            // remueve el registro tambien del datatable
+                            if(response == 1){
+                               $(el).closest('tr').css('background','tomato');
+                               $(el).closest('tr').fadeOut(800,function(){
+                               $(this).remove();
+                               location.reload();
+                       });
+                        }else{
+                            mensaje('error','Aviso','Registro No Fue Eliminado! Existen aspirates con el curso a borrar',null);
+                        }
+                          }
+                        });
+                      }
+                });
+            });
+  
+   
+            $('#tlista_cursos tbody').on('click', '.ver', function() {
+                $("h4.modal-title").text("Detalle de Curso");
+              
+                // Delete id
+                var curso_id = $(this).data('id');
+                if(curso_id != ''){
+                    $.ajax({  
+                        url:'/ver_detalle_curso',  
+                        method:'POST',  
+                        data:{curso_id:curso_id},  
+                        success:function(response){
+                               //alert(response);  
+                             $('#curso_detail').html(response);  
+                             $('#dataModal').modal('show');  
+                        },
+                       error : function(request, status, error) {
+   
+                               var val = request.responseText;
+                               alert("error"+val);
+                       }  
+                   });  
+                }
+                else{
+                    bootbox.alert('NO LLEGO EL ID CURSO');
+                }
+            });
+
+            $('#tlista_cursos tbody').on('click', '.update', function() {
+       
+                $("h4.modal-title").text("Modificación de Curso");
+
+                // Delete id
+                var curso_id = $(this).data('id');
+                //alert(curso_id);
+                $.ajax({  
+                    url:'/ver_detalle_curso_data',  
+                    method:'POST',  
+                    data:{curso_id:curso_id},
+                    dataType:"json",  
+                    success:function(response){
+                            //alert(JSON.stringify(response));
+                            $('#f_nombre').val(response.nombre);
+                            $('#curso_id').val(response.id);
+                            
+                            //$('#curso_detail').html(response);
+                            $('#insert').val("Actualizar");  
+                            $('#add_data_Modal').modal('show');  
+                    },
+                   error : function(request, status, error) {
+
+                           var val = request.responseText;
+                           alert("error"+val);
+                   }  
+               });
+
+          
+                $('#add_data_Modal').modal('show'); 
+            });
+        });//end ready function
+    </script>
+    </body>
+    <div id="dataModal" class="modal fade">  
+        <div class="modal-dialog">  
+             <div class="modal-content">  
+                  <div class="modal-header">  
+                       <legend class="text-center header">
+                       <h4 class="modal-title">Detalles de Curso</h4>
+                       <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                       </legend>  
+                         
+                  </div>  
+                  <div class="modal-body" id="curso_detail">  
+                  </div>  
+                  <div class="modal-footer"> 
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                  </div>  
+             </div>  
+        </div>  
+   </div>
+  
+  
+  <!-- modal para insertar y update -->
+    <div id="add_data_Modal" class="modal fade">  
+        <div class="modal-dialog">  
+             <div class="modal-content">  
+                  <div class="modal-header">
+                  <legend class="text-center header">
+                       <h4 class="modal-title"></h4>
+                       </legend>  
+                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>  
+                         
+                  </div>  
+                  <div class="modal-body">  
+                       <form method="post" id="insert_form">  
+                            <label>Nombre de Curso:</label>
+                            <input type="text" name="f_nombre" id="f_nombre" class="form-control" />  
+                            <br />  
+                            <input type="text" name="curso_id" id="curso_id" readonly="true" />  
+                            <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />  
+                       </form>  
+                  </div>  
+                  <div class="modal-footer">  
+                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>  
+                  </div>  
+             </div>  
+        </div>  
+   </div>
+    {% endblock %}
