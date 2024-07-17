@@ -13,9 +13,37 @@ from model.package_model.Aspirante import Aspirante
 from model.package_model.AspiranteCursos import AspiranteCursos
 from model.package_model.Usuarios import Usuarios
 
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'j\x86\x14\xcc:\x99\xb3\x91\xf8/Bv\r\xaa"\xf1\x8a\xfa(A\xa1\xe2\x85\xd6'
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/db_cursos'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
+
+class EmpresaORM(db.Model):
+    __tablename__ = "empresa"
+    ID_EMPRESA = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    NOMBRE_EMPRESA = db.Column(db.String(30))
+    
+    
+    def __init__(self, nombre_empresa):
+        self.NOMBRE_EMPRESA = nombre_empresa
+         
+with app.app_context():
+    db.create_all()
+    
+class EmpresaORMSchema(ma.Schema):
+    class Meta:
+         fields = ('ID_EMPRESA','NOMBRE_EMPRESA')
+    
+empresa_schema = EmpresaORMSchema()
+empresas_schema = EmpresaORMSchema(many=True)
+        
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -150,6 +178,22 @@ def logout():
    session.pop('user_id', None)
    session.pop('user_name', None)
    return redirect(url_for('index'))
+
+
+@app.route('/add_empresa')
+def add_empresa():
+    return render_template('add_empresa.html')
+
+@app.route("/registra_empresa",methods=['POST'])
+def registra_empresa():
+    _f_nombre=request.form['f_nombre'].upper()
+    #print("hola:",_f_nombre)
+    new_empre= EmpresaORM(_f_nombre)
+    #print("hello:",new_empre)
+    db.session.add(new_empre)
+    db.session.commit()
+    flash(f"Empresa registrada Correctamente","Success")
+    return redirect(url_for('add_empresa'))
 
 if __name__ == "__main__":
     app.run(debug=True)
