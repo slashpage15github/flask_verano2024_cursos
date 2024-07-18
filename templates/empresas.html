@@ -1,0 +1,33 @@
+{% extends "layout_base.html" %}
+{% block body %}
+<body>
+    <div class="container_aspirante">
+        <h1>Registro de Empresa</h1>
+
+        
+            {{ data }}
+            <table class="table table-striped" style="width:30%">
+                <thead>
+                    <tr>
+                        <th>ID EMPRESA</th>
+                        <th>NOMBRE EMPRESA</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr>
+                        <td>{{ item.id_empresa }}</td>
+                        <td>{{ item.nombre_empresa }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+
+
+    </div><!-- end container-->
+    <!--<script src="js/script_aspirante.js"></script>--> <!-- Importa el script para validaciones -->
+</body>
+{% endblock %}

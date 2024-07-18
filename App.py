@@ -27,19 +27,19 @@ ma = Marshmallow(app)
 
 class EmpresaORM(db.Model):
     __tablename__ = "empresa"
-    ID_EMPRESA = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    NOMBRE_EMPRESA = db.Column(db.String(30))
+    id_empresa = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nombre_empresa = db.Column(db.String(30))
     
     
     def __init__(self, nombre_empresa):
-        self.NOMBRE_EMPRESA = nombre_empresa
+        self.nombre_empresa = nombre_empresa
          
 with app.app_context():
     db.create_all()
     
 class EmpresaORMSchema(ma.Schema):
     class Meta:
-         fields = ('ID_EMPRESA','NOMBRE_EMPRESA')
+         fields = ('id_empresa','nombre_empresa')
     
 empresa_schema = EmpresaORMSchema()
 empresas_schema = EmpresaORMSchema(many=True)
@@ -194,6 +194,15 @@ def registra_empresa():
     db.session.commit()
     flash(f"Empresa registrada Correctamente","Success")
     return redirect(url_for('add_empresa'))
+
+@app.route('/empresas')
+def empresas():
+    all_tasks = EmpresaORM.query.all()
+    result = empresas_schema.dump(all_tasks)
+    #return jsonify(result)
+    data=json.dumps(result)
+    return render_template('empresas.html',data=json.loads(data))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
